@@ -124,10 +124,7 @@ class Library {
 class StudentLog {
     constructor(name) {
         this.name = name;
-        this.journal = {
-            // algebra: [],
-            // geometry: []
-        };
+        this.journal = {};
     }
 
     getName() {
@@ -135,21 +132,50 @@ class StudentLog {
     }
 
     addGrade(grade, subject) {
-        //for (subject in this.journal) {
+        if (this.journal.hasOwnProperty(subject) !== true) {
+            this.journal[subject] = [];
+        }
+
         if (grade >= 1 && grade <= 5) {
-            if (this.journal.hasOwnProperty(subject)) {
-                this.journal[subject].push(grade);
-                return this.journal[subject].length;
-            } else {
-                //add subject in the journal    
-            }
+            this.journal[subject].push(grade);
+            return this.journal[subject].length;
         } else {
             console.log(`Вы пытались поставить оценку ${grade} по предмету ${subject}. Допускаются только числа от 1 до 5.`);
             return this.journal[subject].length;
         }
-        //} 
     }
 
+    getAverageBySubject(subject) {
+        let total = 0;
+
+        if (this.journal.hasOwnProperty(subject) !== true || this.journal[subject].length == 0) {
+            return 0;
+        }
+
+        for (let i = 0; i < this.journal[subject].length; i++) {
+            total += this.journal[subject][i];
+        }
+
+        return total / this.journal[subject].length;
+    }
+
+    getTotalAverage() {
+        let averageScore = {};
+        let count = 0;
+        let total = 0;
+
+        if (typeof this.journal !== undefined && this.journal || this.journal == undefined ) {  //проверка на пустой объект
+            averageScore.average = 0;
+        }
+
+        for (let subject in this.journal) {
+            averageScore[subject] = this.getAverageBySubject(subject);
+            if (this.journal.hasOwnProperty(subject)) count ++;
+            total += averageScore[subject];
+            averageScore.average = total / count;
+        }
+        return averageScore.average
+    }
 }
 
 const log = new StudentLog('Олег Никифоров');
@@ -166,3 +192,14 @@ console.log(log.addGrade(5, 'geometry'));
 // console.log(log.addGrade(25, 'geometry'));
 // Вы пытались поставить оценку "25" по предмету "geometry". Допускаются только числа от 1 до 5.
 // 1
+
+log.addGrade(2, 'algebra');
+log.addGrade(4, 'algebra');
+log.addGrade(5, 'geometry');
+log.addGrade(4, 'geometry');
+
+console.log(log.getAverageBySubject('geometry')); // 4.5
+console.log(log.getAverageBySubject('algebra')); // 3
+//console.log(log.getAverageBySubject('math')); // 0
+
+console.log(log.getTotalAverage()); // 3,75
