@@ -25,14 +25,13 @@ class Triangle {
     }
     
     getPerimeter() {
-        const P = this.a + this.b + this.c;
-        return P
+        return this.a + this.b + this.c;
     }
 
     getArea() {
         const p = this.getPerimeter() / 2;
         const S = Math.sqrt(p * (p - this.a) * (p - this.b) * (p - this.c));
-        return S.toFixed(3);
+        return parseFloat(S.toFixed(3));
     } 
 }
 
