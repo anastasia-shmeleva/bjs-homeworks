@@ -26,14 +26,12 @@ class AlarmClock {
         m = m < 10 ? '0' + m : m;
         return h + ':' + m;
     }
-
+    
     start() {
-        function checkClock(call) {
-            if (call => call.time === this.getCurrentFormattedTime()) return call.callback();
-        }
+        let checkClock = call => {if (call.time === this.getCurrentFormattedTime()) call.callback()}
         if (!this.timerId) return this.timerId = setInterval(() => {
-            this.alarmCollection.forEach(call => checkClock(call));
-        });
+            this.alarmCollection.forEach(call => checkClock(call))
+        }, 1000);
     }
 
     stop() {
@@ -49,7 +47,7 @@ class AlarmClock {
     }
 
     clearAlarms() {
-        this.stop(this.alarmCollection);
+        this.stop();
         this.alarmCollection.forEach(call => this.removeClock(call.id));
     }
 }
